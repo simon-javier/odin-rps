@@ -6,49 +6,34 @@ let computerScore = 0;
 
 function getComputerChoice() {
     const choice = Math.floor(Math.random() * 3);
-    switch (choice) {
-        case 0:
-            return 'rock'
-        case 1:
-            return 'paper'
-        case 2:
-            return 'scissors'
-        default:
-            break;
-    }
+    return choice === 0 ? 'rock' : choice === 1 ? 'paper' : choice === 2 ? 'scissors' : null;
 }
 
 function getHumanChoice() {
     let choice = "";
     while (true) {
-        choice = prompt("Choose [rock, paper, scissors]: ")
-        switch (choice) {
-            case 'rock':
-                return choice;
-            case 'scissors':
-                return choice;
-            case 'paper':
-                return choice;
-            default:
-                console.log("Please don't be dumb and try again!");
+        choice = prompt("Choose [rock, paper, scissors]: ").toLowerCase();
+        if (choice !== 'rock' && choice !== 'scissors' && choice !== 'paper') {
+            console.log("Please don't be dumb and try again!");
+            continue;
         }
+        return choice;
     }
 }
 
 function playRound(humanChoice, computerChoice) {
-    if (humanChoice == computerChoice) {
+    if (humanChoice === computerChoice) {
         console.log("It's a Tie!");
         return;
     }
-    else if (humanChoice == 'rock' && computerChoice != 'paper') {
-        humanScore++;
-        console.log("Human Wins!");
-        return;
-    } else if (humanChoice == 'paper' && computerChoice != 'scissors') {
-        humanScore++;
-        console.log("Human Wins!");
-        return;
-    } else if (humanChoice == 'scissors' && computerChoice != 'rock') {
+
+    const winningCondition = {
+        'rock': 'scissors',
+        'paper': 'rock',
+        'scissors': 'paper',
+    }
+
+    if (winningCondition[humanChoice] === computerChoice) {
         humanScore++;
         console.log("Human Wins!");
         return;
@@ -61,21 +46,20 @@ function playRound(humanChoice, computerChoice) {
 
 function playGame() {
     while (round <= MAX_ROUND) {
-        console.log("Round " + round)
+        console.log(`${'='.repeat(20)} ROUND ${round} ${'='.repeat(20)}`)
         const humanSelection = getHumanChoice();
         const computerSelection = getComputerChoice();
 
-        console.log("Human select: " + humanSelection);
-        console.log("Computer select: " + computerSelection);
+        console.log(`Human select: ${humanSelection}`);
+        console.log(`Computer select: ${computerSelection}`);
 
         playRound(humanSelection, computerSelection);
 
-        console.log("Human: " + humanScore);
-        console.log("Computer: " + computerScore);
         round++;
+        console.log(`Scores -> Human: ${humanScore}, Computer: ${computerScore}`);
     }
 
-    if (humanScore == computerScore) {
+    if (humanScore === computerScore) {
         console.log("No one wins!");
     } else if (humanScore > computerScore) {
         console.log("Human wins!");
